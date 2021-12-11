@@ -12,11 +12,9 @@ Created on Fri Dec 10 08:40:10 2021
 
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
 
 stop_words      = stopwords.words('english')
-porter_stemmer  = PorterStemmer()
 word_lemmitizer = WordNetLemmatizer()
 
 #function to read file and return its data
@@ -46,10 +44,10 @@ tokenized_documents={}
 
 for key, value in documents.items():
     tokenized_documents[key]= word_tokenize(value) #tokenize documents
+    tokenized_documents[key]= [t.casefold() for t in tokenized_documents[key]] #case folding
     tokenized_documents[key]= [t for t in tokenized_documents[key] if not t in stop_words] #remove stop words
-    tokenized_documents[key]= [porter_stemmer.stem(t) for t in tokenized_documents[key]] #apply porter stemming
     tokenized_documents[key]= [word_lemmitizer.lemmatize(t) for t in tokenized_documents[key]] #apply lemmitizer
     tokenized_documents[key]= [t for t in tokenized_documents[key] if not t in punctuations] #remove punctuations
 
 
-print(tokenized_documents)
+print(tokenized_documents)  
