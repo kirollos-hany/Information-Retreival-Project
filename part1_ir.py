@@ -42,12 +42,11 @@ punctuations="?:!.,;"
 
 tokenized_documents={}
 
-for key, value in documents.items():
-    tokenized_documents[key]= word_tokenize(value) #tokenize documents
-    tokenized_documents[key]= [t.casefold() for t in tokenized_documents[key]] #case folding
-    tokenized_documents[key]= [t for t in tokenized_documents[key] if not t in stop_words] #remove stop words
-    tokenized_documents[key]= [word_lemmitizer.lemmatize(t) for t in tokenized_documents[key]] #apply lemmitizer
-    tokenized_documents[key]= [t for t in tokenized_documents[key] if not t in punctuations] #remove punctuations
-
-
-print(tokenized_documents)  
+def tokenize ():
+    for key, value in documents.items():
+        tokenized_documents[key]= word_tokenize(value) #tokenize documents
+        tokenized_documents[key]= [t.casefold() for t in tokenized_documents[key]] #case folding
+        tokenized_documents[key]= [t for t in tokenized_documents[key] if not t in stop_words] #remove stop words
+        tokenized_documents[key]= [word_lemmitizer.lemmatize(t) for t in tokenized_documents[key]] #apply lemmitizer
+        tokenized_documents[key]= [t for t in tokenized_documents[key] if not t in punctuations] #remove punctuations
+    return tokenized_documents
