@@ -1,6 +1,7 @@
 # importing libraries
 import numpy as np
 import os
+import re
 import nltk
 from nltk.stem import PorterStemmer
 from nltk.tokenize import TweetTokenizer
@@ -104,3 +105,32 @@ for folder_name in folder_names:
 print("Positional Index")
 print(pos_index)
 
+
+def one_word_query(word, invertedIndex):
+	pattern = re.compile('[\W_]+')
+	word = pattern.sub(' ',word)
+	if word in invertedIndex.keys():
+		return [filename for filename in invertedIndex[word].keys()]
+	else:
+		return []
+
+def phrase_query(string, invertedIndex):
+	pattern = re.compile('[\W_]+')
+	string = pattern.sub(' ',string)
+	listOfLists, result = [],[]
+	for word in string.split():
+		listOfLists.append(one_word_query(word,invertedIndex))
+	setted = set(listOfLists[0]).intersection(*listOfLists)
+	for filename in setted:
+		temp = []
+		for word in string.split():
+			temp.append(invertedIndex[word][filename][:])
+		for i in range(len(temp)):
+			for ind in range(len(temp[i])):
+				temp[i][ind] -= i
+		if set(temp[0]).intersection(*temp):
+			result.append(filename)
+	return result, string
+	# return rankResults(result, string)
+
+print(phrase_query('doc1 doc2',pos_index))
