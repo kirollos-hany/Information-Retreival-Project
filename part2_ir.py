@@ -27,8 +27,6 @@ def remove_header_footer(final_string):
     return new_final_string
 
 
-tokenized_documents = tokenize()  # From Malak Task
-
 # Replace by your path
 projectPath = "E:\\College\\4\\Term 1\\IR\\project"
 # In this example, we create the positional index for only 1 folder.
@@ -61,7 +59,7 @@ for folder_name in folder_names:
         # We need to preserve the order because we require positions.
         # 'preprocessing' function does some basic punctuation removal,
         # stop-word removal etc.
-        final_token_list = tokenized_documents
+        final_token_list = tokenize(stuff)
 
         # For position and term in the tokens.
         for pos, term in enumerate(final_token_list):
@@ -102,9 +100,14 @@ for folder_name in folder_names:
         fileno += 1
 
 # Sample positional index to test the code.
+sample_pos_idx = pos_index['test']
 print("Positional Index")
-print(pos_index)
+print(sample_pos_idx)
 
+file_list = sample_pos_idx[1]
+print("Filename, [Positions]")
+for fileno, positions in file_list.items():
+    print(file_map[fileno], positions)
 
 def one_word_query(word, invertedIndex):
 	pattern = re.compile('[\W_]+')
@@ -130,7 +133,7 @@ def phrase_query(string, invertedIndex):
 				temp[i][ind] -= i
 		if set(temp[0]).intersection(*temp):
 			result.append(filename)
-	return result, string
+	return [result, string]
 	# return rankResults(result, string)
 
 print(phrase_query('doc1 doc2',pos_index))
