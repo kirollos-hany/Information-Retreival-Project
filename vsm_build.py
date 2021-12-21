@@ -165,6 +165,7 @@ def rank_result_docs(query_vector, result_docs, normalized_tfidf):
         score = dot(query_vector, norm_doc_vector)
         doc_score_tuple = (doc_id, score)
         result_docs_scores.append(doc_score_tuple)
+        result_docs_scores.sort(key = lambda x : x[1], reverse=True)
     return result_docs_scores
 
 df_idf = build_df_idf(pos_indx, docs_count)
