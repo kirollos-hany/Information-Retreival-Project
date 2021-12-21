@@ -11,6 +11,9 @@ def casefolding(tokens):
 
 def remove_stopwords(tokens):
     stop_words = stopwords.words('english')
+    stop_words.remove('to')
+    stop_words.remove('where')
+    stop_words.remove('in')
     return [t for t in tokens if not t in stop_words]
 
 def lemmatize(tokens):

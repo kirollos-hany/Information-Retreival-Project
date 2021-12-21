@@ -28,34 +28,12 @@ def write_pos_index_todisk(index):
             index_record_str += f'({posting.doc_id}-'
             for pos in posting.term_positions:
                 index_record_str += f'{pos},'
-            index_record_str += f')'
+            index_record_str += ')'
         index_record_str += '\n'
         result.append(index_record_str)
     with open('./output/pos_index.txt', 'w') as index_file:
         for index in result:
             index_file.write(index)
-
-def write_vector_model_todisk(vector_model):
-    result = []
-    for term in vector_model:
-        record_str = f'{term}: '
-        for tfidf in vector_model[term]:
-            record_str += f'{tfidf} '
-        record_str += '\n'
-        result.append(record_str)
-    with open('./output/vector_model.txt', 'w') as file:
-        for record in result:
-            file.write(record)
-
-def read_vector_model_fromdisk():
-    vector_model = {}
-    with open('./output/vector_model.txt', 'r') as file:
-        for record in file:
-            term_tfidfs_split = record.split(':')
-            term = term_tfidfs_split[0]
-            tfidfs = [float(tfidf) for tfidf in term_tfidfs_split[1].split()]
-            vector_model[term] = tfidfs
-    return vector_model
             
 def read_pos_index_fromdisk():
     index = {}
@@ -68,15 +46,21 @@ def read_pos_index_fromdisk():
             postings = []
             postings_str = term_df_postings_split[1]
             posting_entry = PostingEntry(0, [])
-            for char_indx in range(len(postings_str)):
-                char = postings_str[char_indx]
-                if char == '-':
-                    posting_entry.doc_id = int(postings_str[char_indx - 1])
-                elif char == ',':
-                    posting_entry.term_positions.append(int(postings_str[char_indx - 1]))
+            hyphen_reached = False
+            doc_id = ""
+            for char in postings_str:
+                if char.isdigit() and not hyphen_reached:
+                    doc_id += char
+                elif char == '-':
+                    hyphen_reached = True
+                elif char.isdigit() and hyphen_reached:
+                    posting_entry.term_positions.append(int(char))
                 elif char == ')':
+                    posting_entry.doc_id = int(doc_id)
                     postings.append(posting_entry)
                     posting_entry = PostingEntry(0, [])
+                    hyphen_reached = False
+                    doc_id = ""
             index[index_key] = postings
     return index
 
@@ -90,17 +74,22 @@ def read_term_postings_fromdisk(term):
             if read_term == term:
                 postings_str = term_df_postings_split[1]
                 posting_entry = PostingEntry(0, [])
-                for indx in range(len(postings_str)):
-                    char = postings_str[indx]
-                    if char == '-':
-                        posting_entry.doc_id = int(postings_str[indx - 1])
-                    elif char == ',':
-                        posting_entry.term_positions.append(int(postings_str[indx - 1]))
+                hyphen_reached = False
+                doc_id = ""
+                for char in postings_str:
+                    if char.isdigit() and not hyphen_reached:
+                        doc_id += char
+                    elif char == '-':
+                        hyphen_reached = True
+                    elif char.isdigit() and hyphen_reached:
+                        posting_entry.term_positions.append(int(char))
                     elif char == ')':
+                        posting_entry.doc_id = int(doc_id)
                         postings.append(posting_entry)
                         posting_entry = PostingEntry(0, [])
+                        hyphen_reached = False
+                        doc_id = ""
     return postings
-
 
 def read_terms_fromdisk():
     terms = []
@@ -112,11 +101,15 @@ def read_terms_fromdisk():
             terms.append(term)
     return terms
 
-def compute_tfidf(df, tf, docs_count):
-    idf = math.log(docs_count / df, 10)
-    log_tf = math.log(1 + tf, 10)
-    return log_tf * idf
+def compute_idf(df, docs_count):
+    return math.log(docs_count / df, 10)
 
+def read_output_file(file_name):
+    matrix = []
+    with open(f'./output/{file_name}.txt', 'r') as file:
+        for line in file:
+            matrix.append(line)
+    return matrix
 
     
     
