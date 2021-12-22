@@ -11,6 +11,7 @@ wtf_matrix = read_output_file('wtf_matrix')
 df_idf_matrix = read_output_file('df_idf')
 docs_lengths = read_output_file('doc_lengths')
 normalized_tfidf = read_output_file('normalized_tfidf')
+tf_idf_matrix = read_output_file('tf_idf')
 
 def display_pos_index(index):
     i = 0
@@ -28,6 +29,15 @@ def display_tf_matrix(docs_count, tf_matrix):
         print(f"doc{i}", end=" ")
     print()
     for line in tf_matrix:
+        print(line)
+        
+def display_tf_idf_matrix(docs_count, tf_idf_matrix):
+    print("TF IDF MATRIX")
+    print("\t", end=" ")
+    for i in range(1, docs_count + 1):
+        print(f"doc{i}", end = " ")
+    print()
+    for line in tf_idf_matrix:
         print(line)
 
 def display_wtf_matrix(docs_count, wtf_matrix):
@@ -67,7 +77,7 @@ if __name__ == '__main__':
     choices = ['1-display positional index', '2-display tf matrix'
                , '3-display wtf matrix', '4-display df idf matrix',
                '5-display doc lengths', '6-display normalized tfidf',
-               '7-perform phrase search', '8-exit']
+               '7-display tf-idf matrix','8-perform phrase search', '9-exit']
     cont_flag = True
     while cont_flag:
          try:
@@ -77,16 +87,18 @@ if __name__ == '__main__':
             if user_choice == 1:
                 display_pos_index(pos_index)
             elif user_choice == 2:
-                display_tf_matrix(docs_count)
+                display_tf_matrix(docs_count, tf_matrix)
             elif user_choice == 3:
-                display_wtf_matrix(docs_count)
+                display_wtf_matrix(docs_count, wtf_matrix)
             elif user_choice == 4:
-                display_df_idf_matrix(docs_count)
+                display_df_idf_matrix(docs_count, df_idf_matrix)
             elif user_choice == 5:
-                display_doc_lengths()
+                display_doc_lengths(docs_lengths)
             elif user_choice == 6:
-                display_normalized_tfidf()
+                display_normalized_tfidf(normalized_tfidf)
             elif user_choice == 7:
+                display_tf_idf_matrix(docs_count, tf_idf_matrix)
+            elif user_choice == 8:
                 query = input("Enter phrase to search:\n")
                 processed_query = preprocess(query)
                 result_docs = phrase_query_search(processed_query)
@@ -96,7 +108,7 @@ if __name__ == '__main__':
                     query_vector = construct_query_vector(processed_query, df_idf_matrix)
                     ranked_docs = rank_result_docs(query_vector, result_docs, normalized_tfidf)
                     display_result_docs(ranked_docs)
-            elif user_choice == 8:
+            elif user_choice == 9:
                 cont_flag = False
          except ValueError:
              print("Invalid choice, please choose a number from the menu")

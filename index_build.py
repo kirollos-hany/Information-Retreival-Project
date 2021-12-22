@@ -6,8 +6,6 @@ from utils import read_doc, get_docs_count, posting_entry_sort_key, write_pos_in
 from preprocessing import preprocess
 import pandas as pd
 
-
-
 docs_count = get_docs_count()
 docs = []
 for i in range(1, docs_count + 1):

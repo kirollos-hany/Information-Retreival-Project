@@ -123,7 +123,7 @@ def construct_query_vector(processed_query, df_idf_matrix):
     for term in processed_query:
         term_tf_dict[term] += 1
     for key in term_tf_dict:
-        print(f"term:{term} tf:{term_tf_dict[term]}")
+        print(f"term:{key} tf:{term_tf_dict[term]}")
         term_tf_dict[key] = 1 + math.log(term_tf_dict[key], 10)
         print(f"term:{key} wtf:{term_tf_dict[key]}")
     print("Query tf-idf vector:")

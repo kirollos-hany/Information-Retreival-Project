@@ -1,6 +1,3 @@
-from PostingEntry import PostingEntry
-
-
 class IndexKey:
     def __init__(self, term, document_frequency):
         self.term = term
