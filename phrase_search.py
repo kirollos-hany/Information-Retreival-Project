@@ -23,7 +23,7 @@ def intersect_postings(posting1,posting2,k):
                         pi = pj = 0 
                         while pi != plen1:                                              
                                 while pj != plen2:                                      
-                                        if abs(pp1[pi] - pp2[pj]) <= k:                 
+                                        if pp1[pi] - pp2[pj] <= k and pp1[pi] < pp2[pj]:                 
                                                 positions.append(pp2[pj])                       
                                         elif pp2[pj] > pp1[pi]:                        
                                                 break    
@@ -56,7 +56,7 @@ def phrase_query_search(processed_query):
         ptr_2 += 1
     return result
 
-
+print(phrase_query_search(['mercy', 'worser']))
         
 
 
